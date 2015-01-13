@@ -7,14 +7,21 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.ishchenko.rest.service.helper.CustomJsonDateDeserializer;
 import ua.ishchenko.rest.service.helper.CustomJsonDateSerializer;
@@ -26,20 +33,24 @@ import ua.ishchenko.rest.service.helper.CustomJsonDateSerializer;
  */
 @SuppressWarnings("restriction")
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso(User.class)
 @Entity
-@Table(name = "users", catalog = "emoney_store_db")
+@Transactional
+@Table(name = "users", schema = "HR")
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = -8039686696076337053L;
 
 	/** id of the user */
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="user_sequence") 
+	@SequenceGenerator(name="user_sequence", sequenceName = "users_sequence")
 	@Column(name = "id")
 	private Long id;
 
 	/** name of the user */
-	@Column(name = "title")
+	@Column(name = "user_name")
 	private String name;
 
 	/** creation date */
@@ -51,6 +62,14 @@ public class User implements Serializable {
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "wallet_id", referencedColumnName = "wallet_id")
 	private Wallet wallet;
+
+	public Wallet getWallet() {
+		return wallet;
+	}
+
+	public void setWallet(Wallet wallet) {
+		this.wallet = wallet;
+	}
 
 	public User() {
 		this(null);

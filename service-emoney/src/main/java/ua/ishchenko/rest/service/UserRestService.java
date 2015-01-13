@@ -1,6 +1,7 @@
 package ua.ishchenko.rest.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -17,39 +18,44 @@ import javax.ws.rs.core.Response;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.codehaus.jackson.JsonParser;
 
 import ua.ishchenko.rest.dao.UserDao;
 import ua.ishchenko.rest.entities.User;
+import ua.ishchenko.rest.entities.Wallet;
 
 /**
  * 
  * Service class that handles REST requests
  * 
- * @author amacoder
+ * @author jaros
  * 
  */
 @Component
 @Path("/users")
+@Transactional()
 public class UserRestService {
 
 	@Autowired
-	private UserDao  userDao;
+	private UserDao userDao;
 
 	/************************************ CREATE ************************************/
 
 	/**
-	 * Adds a new resource (user) from the given json format (at least title
-	 * and feed elements are required at the DB level)
+	 * Adds a new resource (user) from the given json format (at least title and
+	 * feed elements are required at the DB level)
 	 * 
 	 * @param user
 	 * @return
 	 */
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.TEXT_HTML })
+	@Produces({ MediaType.APPLICATION_JSON })
 	@Transactional
 	public Response createUser(User User) {
 		userDao.createUser(User);
@@ -59,8 +65,8 @@ public class UserRestService {
 	}
 
 	/**
-	 * A list of resources (here Users) provided in json format will be added
-	 * to the database.
+	 * A list of resources (here Users) provided in json format will be added to
+	 * the database.
 	 * 
 	 * @param Users
 	 * @return
@@ -82,35 +88,40 @@ public class UserRestService {
 	 * Returns all resources (users) from the database
 	 * 
 	 * @return
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonGenerationException 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonGenerationException
 	 */
 	@GET
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public List<User> getUsers() throws JsonGenerationException, JsonMappingException, IOException {
-		List<User> users = userDao.getUsers();		
-		return users; 
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<User> getUsers() throws JsonGenerationException,
+			JsonMappingException, IOException {
+		User us = new User("Vasya");
+		Wallet wal = new Wallet();
+		wal.deposit(100L);
+		us.setWallet(wal);
+
+		userDao.createUser(us);
+		List<User> users = userDao.getUsers();
+
+		return users;
 	}
-	
+
 	@GET
-	@Path("{id}")
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response findById(@PathParam("id") Long id) throws JsonGenerationException, JsonMappingException, IOException {
-		
+	@Path("/{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response findById(@PathParam("id") Long id)
+			throws JsonGenerationException, JsonMappingException, IOException {
+
 		User userById = userDao.getUserById(id);
-		
+
 		if (userById != null) {
-			return Response
-					.status(200)
-					.entity(userById)
+			return Response.status(200).entity(userById)
 					.header("Access-Control-Allow-Headers", "X-extra-header")
-					.allow("OPTIONS")
-					.build();
+					.allow("OPTIONS").build();
 		} else {
-			return Response
-					.status(404)
-					.entity("The user with the id " + id + " does not exist")					
+			return Response.status(404)
+					.entity("The user with the id " + id + " does not exist")
 					.build();
 		}
 	}
@@ -121,8 +132,8 @@ public class UserRestService {
 	 * id
 	 * 
 	 * If the user does not exist yet in the database (verified by
-	 * <strong>id</strong>) then the application will try to create a new
-	 * user resource in the db
+	 * <strong>id</strong>) then the application will try to create a new user
+	 * resource in the db
 	 * 
 	 * @param id
 	 * @param user
@@ -130,7 +141,7 @@ public class UserRestService {
 	 */
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.TEXT_HTML })
+	@Produces({ MediaType.APPLICATION_JSON })
 	@Transactional
 	public Response updateUserById(User user) {
 		String message;
@@ -155,7 +166,7 @@ public class UserRestService {
 	}
 
 	private boolean userCanBeCreated(User user) {
-		return  user.getName() != null;
+		return user.getName() != null;
 	}
 
 	/************************************ DELETE ************************************/
@@ -181,6 +192,42 @@ public class UserRestService {
 		userDao.deleteUsers();
 		return Response.status(200)
 				.entity("All users have been successfully removed").build();
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
+	public Response debit(Long userid, Long debitAmount) {
+		User userById = userDao.getUserById(userid);
+		if (userById != null) {
+			userById.getWallet().withdraw(debitAmount);
+			userDao.updateUser(userById);
+			return Response.status(200)
+					.entity(debitAmount + "debited to "+userById.getName()).build();
+		}
+		else
+		{
+			return Response
+					.status(404)
+					.entity("User with the id " + userid
+							+ " is not present in the database").build();
+		}
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
+	public Response credit(Long userid, Long creditAmount) {
+		User userById = userDao.getUserById(userid);
+		if (userById != null) {
+			userById.getWallet().deposit(creditAmount);
+			userDao.updateUser(userById);
+			return Response.status(200)
+					.entity(creditAmount + "credited to "+userById.getName()).build();
+		}
+		else
+		{
+			return Response
+					.status(404)
+					.entity("User with the id " + userid
+							+ " is not present in the database").build();
+		}
 	}
 
 	public void setuserDao(UserDao userDao) {

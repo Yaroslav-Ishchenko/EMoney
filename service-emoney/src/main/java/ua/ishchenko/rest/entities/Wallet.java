@@ -5,9 +5,14 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
  * Wallet entity
@@ -16,14 +21,17 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @SuppressWarnings("restriction")
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso(Wallet.class)
 @Entity
-@Table(name = "wallets", catalog = "emoney_store_db")
+@Table(name = "wallets" , schema = "HR")
 public class Wallet implements Serializable{
 	private static final long serialVersionUID = -8042686692101387623L;
 	
 	/** id of the wallet */
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="wallet_sequence") 
+	@SequenceGenerator(name="wallet_sequence", sequenceName = "wallets_sequence")
 	@Column(name = "wallet_id")
 	private Long id;
 	
@@ -32,15 +40,15 @@ public class Wallet implements Serializable{
 	private Long balance;
 
 	public Wallet() {
-
+		balance=0L;
 	}
 
-	public void withdraw(long amount) {
+	public void withdraw(Long amount) {
 		balance -= amount;
 	}
 
-	public void deposit(long amount) {
-		balance += amount;
+	public void deposit(Long creditAmount) {
+		balance += creditAmount;
 	}
 
 	public Long getBalance() {
@@ -56,6 +64,10 @@ public class Wallet implements Serializable{
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	@Override
+	public String toString() {
+	return "Wallet [number=" + id + ", balance=" + balance + "]";
 	}
 
 }

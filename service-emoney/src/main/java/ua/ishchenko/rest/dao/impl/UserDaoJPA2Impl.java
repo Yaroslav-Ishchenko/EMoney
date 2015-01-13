@@ -58,7 +58,7 @@ public class UserDaoJPA2Impl implements UserDao {
 	public Long createUser(User user) {
 
 		entityManager.persist(user);
-		entityManager.flush();// force insert to receive the id of the wallet
+		entityManager.flush();// force insert to receive the id of the user
 
 		return user.getId();
 	}
