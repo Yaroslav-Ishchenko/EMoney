@@ -1,33 +1,29 @@
 package ua.ishchenko.rest.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.glassfish.jersey.jackson.JacksonFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.codehaus.jackson.JsonParser;
 
 import ua.ishchenko.rest.dao.UserDao;
 import ua.ishchenko.rest.entities.User;
-import ua.ishchenko.rest.entities.Wallet;
 
 /**
  * 
@@ -82,6 +78,25 @@ public class UserRestService {
 
 		return Response.status(204).build();
 	}
+	
+	@GET
+	@Path("{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response findById(@PathParam("id") Long id)
+			throws JsonGenerationException, JsonMappingException, IOException {
+
+		User userById = userDao.getUserById(Long.valueOf(id));
+
+		if (userById != null) {
+			return Response.status(200).entity(userById)
+					.header("Access-Control-Allow-Headers", "X-extra-header")
+					.allow("OPTIONS").build();
+		} else {
+			return Response.status(404)
+					.entity("The user with the id " + id + " does not exist")
+					.build();
+		}
+	}
 
 	/************************************ READ ************************************/
 	/**
@@ -96,35 +111,13 @@ public class UserRestService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<User> getUsers() throws JsonGenerationException,
 			JsonMappingException, IOException {
-		User us = new User("Vasya");
-		Wallet wal = new Wallet();
-		wal.deposit(100L);
-		us.setWallet(wal);
 
-		userDao.createUser(us);
 		List<User> users = userDao.getUsers();
 
 		return users;
 	}
 
-	@GET
-	@Path("/{id}")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response findById(@PathParam("id") Long id)
-			throws JsonGenerationException, JsonMappingException, IOException {
-
-		User userById = userDao.getUserById(id);
-
-		if (userById != null) {
-			return Response.status(200).entity(userById)
-					.header("Access-Control-Allow-Headers", "X-extra-header")
-					.allow("OPTIONS").build();
-		} else {
-			return Response.status(404)
-					.entity("The user with the id " + id + " does not exist")
-					.build();
-		}
-	}
+	
 
 	/************************************ UPDATE ************************************/
 	/**
@@ -212,8 +205,10 @@ public class UserRestService {
 		}
 	}
 	
+	@Path("/credit")
+	@POST
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-	public Response credit(Long userid, Long creditAmount) {
+	public Response credit(@QueryParam("userid")Long userid,@QueryParam("amount") Long creditAmount) {
 		User userById = userDao.getUserById(userid);
 		if (userById != null) {
 			userById.getWallet().deposit(creditAmount);

@@ -14,6 +14,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import ua.ishchenko.rest.exceptions.NegativeBalanceException;
+
 /**
  * Wallet entity
  * 
@@ -44,6 +46,8 @@ public class Wallet implements Serializable{
 	}
 
 	public void withdraw(Long amount) {
+		if(amount>balance)
+			throw new NegativeBalanceException();
 		balance -= amount;
 	}
 
