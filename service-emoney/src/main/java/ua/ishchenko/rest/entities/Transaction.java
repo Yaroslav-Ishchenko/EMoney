@@ -45,7 +45,7 @@ public class Transaction implements Serializable{
 	Long id;
 	@Column(name = "userid")
 	Long userid;
-	@Column(name = "username")
+	@Column(name = "user_name")
 	String username;
 	@Column(name = "amount")
 	Long amount;
