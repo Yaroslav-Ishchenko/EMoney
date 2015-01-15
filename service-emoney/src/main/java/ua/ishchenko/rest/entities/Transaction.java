@@ -1,5 +1,6 @@
 package ua.ishchenko.rest.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -18,7 +19,6 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.transaction.annotation.Transactional;
 
-import ua.ishchenko.rest.enumerations.ETransactionStatus;
 import ua.ishchenko.rest.service.helper.CustomJsonDateDeserializer;
 import ua.ishchenko.rest.service.helper.CustomJsonDateSerializer;
 
@@ -34,7 +34,7 @@ import ua.ishchenko.rest.service.helper.CustomJsonDateSerializer;
 @Entity
 @Transactional
 @Table(name = "transactions", schema = "HR")
-public class Transaction {
+public class Transaction implements Serializable{
 	private static final long serialVersionUID = -8039623196077737053L;
 	
 	/** id of the Transaction */

@@ -37,6 +37,7 @@
 
 	<bean id="userDao" class="ua.ishchenko.rest.dao.impl.UserDaoJPA2Impl" />
 	<bean id="walletDao" class="ua.ishchenko.rest.dao.impl.WalletDaoJPA2Impl" />
+	<bean id="TransactionDao" class="ua.ishchenko.rest.dao.impl.TransactionDaoJPA2Impl" />
 	<bean id="userRestService" class="ua.ishchenko.rest.service.UserRestService" />
 
 	<bean id="restEMoneyDB" class="org.springframework.jndi.JndiObjectFactoryBean"

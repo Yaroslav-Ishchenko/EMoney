@@ -3,10 +3,4 @@
       <provider>org.hibernate.ejb.HibernatePersistence</provider><!-- indicates which JPA implementation should be used  -->
   
    </persistence-unit>
-   <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10Dialect"/>
-			<property name="hibernate.hbm2ddl.auto" value="create-drop"/>
-            <property name="hibernate.cache.provider_class" value="org.hibernate.cache.HashtableCacheProvider"/>
-            
-		</properties>
 </persistence>
