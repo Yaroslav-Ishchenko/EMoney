@@ -35,7 +35,7 @@ import ua.ishchenko.rest.exceptions.NegativeBalanceException;
 
 /**
  * 
- * Service class that handles REST requests
+ * Service class that handles REST requests related to operations with users
  * 
  * @author jaros
  * 
@@ -89,7 +89,15 @@ public class UserRestService {
 
 		return Response.status(204).build();
 	}
-
+	/************************************ READ ************************************/
+	/**
+	 * Returns a resource (user) from the database
+	 * 
+	 * @return
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonGenerationException
+	 */
 	@GET
 	@Path("{id}")
 	@Produces({ MediaType.APPLICATION_JSON })

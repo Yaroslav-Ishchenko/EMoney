@@ -18,6 +18,7 @@ public class EMoneyECommerceApplication extends ResourceConfig {
 	public EMoneyECommerceApplication(){
 		register(JacksonFeature.class);	
 		register(UserRestService.class);
+		register(TransactionRestService.class);
 		register(LoggingResponseFilter.class);
 		
 	}

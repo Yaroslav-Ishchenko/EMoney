@@ -56,7 +56,7 @@ public class Transaction implements Serializable {
 	@Column(name = "created_date")
 	@JsonSerialize(using = CustomJsonDateSerializer.class)
 	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
-	private Date datetime;
+	private Date dateTime;
 	
 	@Column(name = "status")
 	private int status;
@@ -97,11 +97,11 @@ public class Transaction implements Serializable {
 	}
 
 	public Date getDatetime() {
-		return datetime;
+		return dateTime;
 	}
 
 	public void setDatetime(Date datetime) {
-		this.datetime = datetime;
+		this.dateTime = datetime;
 	}
 
 	public int getStatus() {

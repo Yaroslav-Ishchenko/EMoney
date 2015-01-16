@@ -1,5 +1,6 @@
 package ua.ishchenko.rest.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import ua.ishchenko.rest.entities.Transaction;
@@ -25,4 +26,7 @@ public List<Transaction> getTransactions();
 	public Long createTransaction(Transaction transaction);
 
 	public int updateTransaction(Transaction transaction);
+
+	List<Transaction> getTransactionsByTimeRangeCriteria(Date startDate,
+			Date endDate);
 }
