@@ -1,6 +1,7 @@
 package ua.ishchenko.rest.service;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -14,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -22,8 +24,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import ua.ishchenko.rest.dao.TransactionDao;
 import ua.ishchenko.rest.dao.UserDao;
+import ua.ishchenko.rest.entities.Transaction;
 import ua.ishchenko.rest.entities.User;
+import ua.ishchenko.rest.entities.Wallet;
+import ua.ishchenko.rest.enumerations.EOperationType;
+import ua.ishchenko.rest.enumerations.ETransactionStatus;
+import ua.ishchenko.rest.exceptions.NegativeBalanceException;
 
 /**
  * 
@@ -39,6 +47,9 @@ public class UserRestService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private TransactionDao transactionDao;
 
 	/************************************ CREATE ************************************/
 
@@ -56,7 +67,7 @@ public class UserRestService {
 	public Response createUser(User User) {
 		userDao.createUser(User);
 
-		return Response.status(201)
+		return Response.status(Response.Status.CREATED)
 				.entity("A new User/resource has been created").build();
 	}
 
@@ -78,7 +89,7 @@ public class UserRestService {
 
 		return Response.status(204).build();
 	}
-	
+
 	@GET
 	@Path("{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -88,11 +99,11 @@ public class UserRestService {
 		User userById = userDao.getUserById(Long.valueOf(id));
 
 		if (userById != null) {
-			return Response.status(200).entity(userById)
+			return Response.status(Response.Status.OK).entity(userById)
 					.header("Access-Control-Allow-Headers", "X-extra-header")
 					.allow("OPTIONS").build();
 		} else {
-			return Response.status(404)
+			return Response.status(Response.Status.NOT_FOUND)
 					.entity("The user with the id " + id + " does not exist")
 					.build();
 		}
@@ -111,13 +122,14 @@ public class UserRestService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<User> getUsers() throws JsonGenerationException,
 			JsonMappingException, IOException {
+		User user = new User("Jaros");
+		user.setWallet(new Wallet());
+		userDao.createUser(user);
 
 		List<User> users = userDao.getUsers();
 
 		return users;
 	}
-
-	
 
 	/************************************ UPDATE ************************************/
 	/**
@@ -138,17 +150,17 @@ public class UserRestService {
 	@Transactional
 	public Response updateUserById(User user) {
 		String message;
-		int status;
+		Status status;
 		if (user.getId() != null) {
 			userDao.updateUser(user);
-			status = 200; // OK
+			status = Response.Status.OK; // OK
 			message = "User has been updated";
 		} else if (userCanBeCreated(user)) {
 			userDao.createUser(user);
-			status = 201; // Created
+			status = Response.Status.CREATED; // Created
 			message = "The user you provided has been added to the database";
 		} else {
-			status = 406; // Not acceptable
+			status = Response.Status.NOT_ACCEPTABLE; // Not acceptable
 			message = "The information you provided is not sufficient to perform either an UPDATE or "
 					+ " an INSERTION of the new user resource <br/>"
 					+ " If you want to UPDATE please make sure you provide an existent <strong>id</strong> <br/>"
@@ -172,7 +184,7 @@ public class UserRestService {
 			return Response.status(204).build();
 		} else {
 			return Response
-					.status(404)
+					.status(Response.Status.NOT_FOUND)
 					.entity("User with the id " + id
 							+ " is not present in the database").build();
 		}
@@ -183,50 +195,89 @@ public class UserRestService {
 	@Transactional
 	public Response deleteUsers() {
 		userDao.deleteUsers();
-		return Response.status(200)
+		return Response.status(Response.Status.OK)
 				.entity("All users have been successfully removed").build();
 	}
-	
-	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-	public Response debit(Long userid, Long debitAmount) {
-		User userById = userDao.getUserById(userid);
-		if (userById != null) {
-			userById.getWallet().withdraw(debitAmount);
-			userDao.updateUser(userById);
-			return Response.status(200)
-					.entity(debitAmount + "debited to "+userById.getName()).build();
-		}
-		else
-		{
-			return Response
-					.status(404)
-					.entity("User with the id " + userid
-							+ " is not present in the database").build();
-		}
-	}
-	
-	@Path("/credit")
+
+	@Path("{userid}/withdraw")
 	@POST
-	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-	public Response credit(@QueryParam("userid")Long userid,@QueryParam("amount") Long creditAmount) {
+	@Transactional
+	public Response withdraw(@PathParam("userid") Long userid,
+			@QueryParam("amount") Long withdrawAmount) {
 		User userById = userDao.getUserById(userid);
+
 		if (userById != null) {
-			userById.getWallet().deposit(creditAmount);
-			userDao.updateUser(userById);
-			return Response.status(200)
-					.entity(creditAmount + "credited to "+userById.getName()).build();
-		}
-		else
-		{
+			ETransactionStatus status = null;
+
+			try {
+				userById.getWallet().withdraw(withdrawAmount);
+				userDao.updateUser(userById);
+				status = ETransactionStatus.Success;
+			} catch (NegativeBalanceException ex) {
+				status = ETransactionStatus.Failed;
+			}
+			Transaction transaction = createTransaction(userById, withdrawAmount,
+					status, EOperationType.Withdraw);
+			transactionDao.createTransaction(transaction);
 			return Response
-					.status(404)
+					.status(Response.Status.OK)
+					.entity(withdrawAmount + " withdrawn from "
+							+ userById.getName()).build();
+		} else {
+			return Response
+					.status(Response.Status.NOT_FOUND)
 					.entity("User with the id " + userid
 							+ " is not present in the database").build();
 		}
+
 	}
 
-	public void setuserDao(UserDao userDao) {
+	@Path("{userid}/deposit")
+	@POST
+	@Transactional
+	public Response deposit(@PathParam("userid") Long userid,
+			@QueryParam("amount") Long depositAmount) {
+		User userById = userDao.getUserById(userid);
+		if (userById != null) {
+			ETransactionStatus status = null;
+			try {
+				userById.getWallet().deposit(depositAmount);
+				userDao.updateUser(userById);
+				status = ETransactionStatus.Success;
+			} catch (NegativeBalanceException ex) {
+				status = ETransactionStatus.Failed;
+			}
+			Transaction transaction = createTransaction(userById, depositAmount,
+					status, EOperationType.Withdraw);
+			transactionDao.createTransaction(transaction);
+			return Response
+					.status(Response.Status.OK)
+					.entity(depositAmount + "deposited to " + userById.getName())
+					.build();
+		} else {
+			return Response
+					.status(Response.Status.NOT_FOUND)
+					.entity("User with the id " + userid
+							+ " is not present in the database").build();
+		}
+	}
+	private Transaction createTransaction(User userById, Long amount,
+			ETransactionStatus status, EOperationType operationType) {
+		Transaction transaction = new Transaction();
+		transaction.setUsername(userById.getName());
+		transaction.setUserid(userById.getId());
+		transaction.setAmount(amount);
+		transaction.setDatetime(new Date());
+		transaction.setStatus(status.getValue());
+		transaction.setOperationType(operationType.getValue());
+		return transaction;
+	}
+	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+	}
+
+	public void setTransactionDao(TransactionDao transactionDao) {
+		this.transactionDao = transactionDao;
 	}
 
 }

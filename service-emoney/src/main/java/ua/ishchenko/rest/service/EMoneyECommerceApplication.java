@@ -1,8 +1,9 @@
 package ua.ishchenko.rest.service;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
-
 import org.glassfish.jersey.server.ResourceConfig;
+
+import ua.ishchenko.rest.util.LoggingResponseFilter;
 /**
  * Registers the components to be used by the JAX-RS application  
  * 
@@ -17,6 +18,7 @@ public class EMoneyECommerceApplication extends ResourceConfig {
 	public EMoneyECommerceApplication(){
 		register(JacksonFeature.class);	
 		register(UserRestService.class);
+		register(LoggingResponseFilter.class);
 		
 	}
 }
