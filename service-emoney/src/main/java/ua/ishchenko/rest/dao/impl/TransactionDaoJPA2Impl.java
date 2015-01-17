@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 
 import ua.ishchenko.rest.dao.TransactionDao;
 import ua.ishchenko.rest.entities.Transaction;
+import ua.ishchenko.rest.enumerations.ETransactionsOrderBY;
 
 public class TransactionDaoJPA2Impl implements TransactionDao {
 	@PersistenceContext(unitName = "emoneyRestPersistence")
@@ -67,34 +68,63 @@ public class TransactionDaoJPA2Impl implements TransactionDao {
 		throw new UnsupportedOperationException(
 				"Transactions are not updateable");
 	}
-/**
- * The start and end dates can be placed in any order(but not recommended), the search always starts from less date and goes till bigger
- * @param startDate the start date to look from for searching period, can be null if so than the oldest records will be chosen till the endPeriod if specified 
- * @param endDate the end date till which the searching will look
- */
-	@SuppressWarnings("unchecked")
+
+	/**
+	 * The start AND end dates can be placed in any order(but not recommended),
+	 * the search always starts FROM less date AND goes till bigger.
+	 * 
+	 * <b>Both can be null</b> if so than the response will have all the records
+	 * for the current day in server's timezone
+	 * 
+	 * @param startDate
+	 *            the start date to look FROM for searching period, can be null
+	 *            if so than the oldest records will be chosen till the
+	 *            endPeriod if specified
+	 * @param endDate
+	 *            the end date till which the searching will look
+	 */
+	@SuppressWarnings({ "unchecked", "unused" })
 	@Override
 	public List<Transaction> getTransactionsByTimeRangeCriteria(Date startDate,
-			Date endDate) {
+			Date endDate, int order) {
+		if (startDate == null && endDate == null) {// if both null means that
+													// intention is to get data
+													// for current day
+			startDate = new Date();
+			endDate = new Date();
+		}
+
+		/*
+		 * Trying to figure out which one from the dates is starting and which
+		 * is ending
+		 */
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(startDate);
-		if(calendar.before(endDate))
-		{
-			Date tmp= startDate;
+		if (calendar.before(endDate)) {
+			Date tmp = startDate;
 			startDate = endDate;
 			endDate = tmp;
 		}
-		List<Transaction> list=null;
+		
+		List<Transaction> list = null;//the list that is going to store the search results
 
+		ETransactionsOrderBY eOrder = ETransactionsOrderBY
+				.getETransactionsOrderBY(order);// field to be ordered by AND
+												// asc desc rules
+		String orderBy = "";
+		if (eOrder != null) {
+			orderBy = " ORDER BY" + eOrder.toString();
+		}
 		String queryStr = null;
-		if (startDate != null && endDate != null) {
+		if (startDate != null && endDate != null) {//if both left and right limitations exist
 			Calendar calStart = Calendar.getInstance();
 			Calendar calEnd = Calendar.getInstance();
 			calStart.setTime(startDate);
 			calEnd.setTime(endDate);
-			queryStr = "Select trans from Transaction trans where day(trans.dateTime) BETWEEN :start_date and :end_date "
-					+ "and month(trans.dateTime) BETWEEN :start_month and :end_month "
-					+ "and year(trans.dateTime) BETWEEN :start_year and :end_year";
+			queryStr = "SELECT trans FROM Transaction trans WHERE day(trans.dateTime) BETWEEN :start_date AND :end_date "
+					+ "AND month(trans.dateTime) BETWEEN :start_month AND :end_month "
+					+ "AND year(trans.dateTime) BETWEEN :start_year AND :end_year"
+					+ orderBy;
 			Query query = entityManager.createQuery(queryStr);
 			query.setParameter("start_date", calStart.get(Calendar.DATE));
 			query.setParameter("start_month", calStart.get(Calendar.MONTH) + 1);
@@ -103,26 +133,31 @@ public class TransactionDaoJPA2Impl implements TransactionDao {
 			query.setParameter("end_month", calEnd.get(Calendar.MONTH) + 1);
 			query.setParameter("end_year", calEnd.get(Calendar.YEAR));
 			list = query.getResultList();
-		} else {
+		} else {//if limitation presents for single or any limits aren't specified
 			Date queryDate = null;
 			String sign = null;
-			if (endDate != null) {
+			if (endDate != null) {//if ending date limit is specified
 				queryDate = endDate;
-				sign = "<=";
+				sign = "<=";//select all that less or equal from the date
 
-			} else if (startDate != null) {
-				queryDate=startDate;
-				sign = ">=";
-			} else {
+			} else if (startDate != null) {//if starting date limit is specified
+				queryDate = startDate;
+				sign = ">=";//select all that bigger or equal from the date
+			} else {//if no limit is specified
 				queryDate = new Date();
-				sign = "=";
+				sign = "=";//select all that equal to the date
 			}
 			Calendar cal = Calendar.getInstance();
-			cal.setTime(new Date());
-			queryStr = "Select trans from Transaction trans where day(trans.dateTime) "
-					+ sign + " :date"
-					+ " and month(trans.dateTime) " + sign
-					+ " :month and year(trans.dateTime) " + sign + " :year";
+			cal.setTime(queryDate);
+			queryStr = "SELECT trans FROM Transaction trans WHERE day(trans.dateTime) "
+					+ sign
+					+ " :date"
+					+ " AND month(trans.dateTime) "
+					+ sign
+					+ " :month AND year(trans.dateTime) "
+					+ sign
+					+ " :year"
+					+ orderBy;
 			Query query = entityManager.createQuery(queryStr);
 			query.setParameter("date", cal.get(Calendar.DATE));
 			query.setParameter("month", cal.get(Calendar.MONTH) + 1);
