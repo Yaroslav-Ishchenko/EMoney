@@ -28,5 +28,5 @@ public List<Transaction> getTransactions();
 	public int updateTransaction(Transaction transaction);
 
 	public List<Transaction> getTransactionsByTimeRangeCriteria(Date date,
-			Date date2, int order);
+			Date date2, Integer order);
 }

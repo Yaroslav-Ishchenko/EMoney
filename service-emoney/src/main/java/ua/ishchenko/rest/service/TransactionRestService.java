@@ -108,11 +108,6 @@ public class TransactionRestService {
 		if (endDateNumeric != null) {
 			startDate = new Date(startDateNumeric);
 		} 
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		calendar.add(Calendar.DAY_OF_MONTH, -2);
-		System.err.println(calendar.getTimeInMillis());
-
 		List<Transaction> transactions = transactionDao
 				.getTransactionsByTimeRangeCriteria(startDate, endDate, order);
 

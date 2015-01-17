@@ -86,7 +86,7 @@ public class TransactionDaoJPA2Impl implements TransactionDao {
 	@SuppressWarnings({ "unchecked", "unused" })
 	@Override
 	public List<Transaction> getTransactionsByTimeRangeCriteria(Date startDate,
-			Date endDate, int order) {
+			Date endDate, Integer order) {
 		if (startDate == null && endDate == null) {// if both null means that
 													// intention is to get data
 													// for current day
@@ -116,6 +116,7 @@ public class TransactionDaoJPA2Impl implements TransactionDao {
 			orderBy = " ORDER BY" + eOrder.toString();
 		}
 		String queryStr = null;
+		
 		if (startDate != null && endDate != null) {//if both left and right limitations exist
 			Calendar calStart = Calendar.getInstance();
 			Calendar calEnd = Calendar.getInstance();
