@@ -134,7 +134,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>2.4.1</version>	
+			<version>2.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>
@@ -213,6 +213,10 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
+					<httpConnector>
+						<host>127.0.0.1</host>
+						<port>8888</port>
+					</httpConnector>
 					<jettyConfig>${project.basedir}/src/main/resources/config/jetty9.xml</jettyConfig>
 					<stopKey>STOP</stopKey>
 
@@ -245,13 +249,6 @@
 						<configuration>
 							<scanIntervalSeconds>0</scanIntervalSeconds>
 							<daemon>true</daemon>
-
-							<systemProperties>
-								<systemProperty>
-									<name>jetty.port</name>
-									<value>9000</value>
-								</systemProperty>
-							</systemProperties>
 						</configuration>
 					</execution>
 					<execution>
@@ -263,19 +260,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.2</version>
-				<executions>
-					<execution>
-						<id>default-war</id>
-						<phase>package</phase>
-						<goals>
-							<goal>war</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin> -->
 		</plugins>
 	</build>
 </project>
