@@ -1,7 +1,6 @@
 package ua.ishchenko.rest.service;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class TransactionRestService {
 	 * 
 	 * Service class that handles REST requests related to operations on
 	 * transactions
-	 * 
+	 * O
 	 * @author jaros
 	 * 
 	 */
@@ -51,11 +50,6 @@ public class TransactionRestService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response findById(@PathParam("id") Long id)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		Transaction tr = new Transaction();
-		tr.setAmount((long) (Math.random() * 1000L));
-		tr.setUsername("jaros");
-		tr.setDatetime(new Date());
-		transactionDao.createTransaction(tr);
 
 		Transaction transactionById = transactionDao.getTransactionById(Long
 				.valueOf(id));
@@ -95,6 +89,7 @@ public class TransactionRestService {
 	@Path("/ordered")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Transaction> getTransactionsByDateWithOrder(
+			@QueryParam("userid") Long userid,
 			@QueryParam("startDate") Long startDateNumeric,
 			@QueryParam("endDate") Long endDateNumeric,
 			@QueryParam("order") Integer order) throws JsonGenerationException,
@@ -108,17 +103,11 @@ public class TransactionRestService {
 		if (endDateNumeric != null) {
 			startDate = new Date(startDateNumeric);
 		} 
+		
 		List<Transaction> transactions = transactionDao
-				.getTransactionsByTimeRangeCriteria(startDate, endDate, order);
+				.getTransactionsByTimeRangeCriteria(userid,startDate, endDate, order);
 
 		return transactions;
-	}
-
-	@GET
-	@Path("/date")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Date getDate() {
-		return new Date();
 	}
 	// view transaction per user(or for all users)
 	// for period (from/to)

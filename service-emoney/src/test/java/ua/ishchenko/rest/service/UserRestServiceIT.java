@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import ua.ishchenko.rest.entities.User;
 
-public class UserRestServiceTest {
+public class UserRestServiceIT {
 
 	@Test
 	public void testGetUser() throws JsonGenerationException,

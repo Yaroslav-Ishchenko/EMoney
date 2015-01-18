@@ -85,8 +85,8 @@ public class TransactionDaoJPA2Impl implements TransactionDao {
 	 */
 	@SuppressWarnings({ "unchecked", "unused" })
 	@Override
-	public List<Transaction> getTransactionsByTimeRangeCriteria(Date startDate,
-			Date endDate, Integer order) {
+	public List<Transaction> getTransactionsByTimeRangeCriteria(Long userid,
+			Date startDate, Date endDate, Integer order) {
 		if (startDate == null && endDate == null) {// if both null means that
 													// intention is to get data
 													// for current day
@@ -105,8 +105,9 @@ public class TransactionDaoJPA2Impl implements TransactionDao {
 			startDate = endDate;
 			endDate = tmp;
 		}
-		
-		List<Transaction> list = null;//the list that is going to store the search results
+
+		List<Transaction> list = null;// the list that is going to store the
+										// search results
 
 		ETransactionsOrderBY eOrder = ETransactionsOrderBY
 				.getETransactionsOrderBY(order);// field to be ordered by AND
@@ -115,14 +116,19 @@ public class TransactionDaoJPA2Impl implements TransactionDao {
 		if (eOrder != null) {
 			orderBy = " ORDER BY" + eOrder.toString();
 		}
+		String userSelQuery = "";
+		if (userid != null) {
+			userSelQuery = " trans.userid = '" + userid + "' AND ";
+		}
 		String queryStr = null;
-		
-		if (startDate != null && endDate != null) {//if both left and right limitations exist
+
+		if (startDate != null && endDate != null) {// if both left and right
+													// limitations exist
 			Calendar calStart = Calendar.getInstance();
 			Calendar calEnd = Calendar.getInstance();
 			calStart.setTime(startDate);
 			calEnd.setTime(endDate);
-			queryStr = "SELECT trans FROM Transaction trans WHERE day(trans.dateTime) BETWEEN :start_date AND :end_date "
+			queryStr = "SELECT trans FROM Transaction trans WHERE "+ userSelQuery +" day(trans.dateTime) BETWEEN :start_date AND :end_date "
 					+ "AND month(trans.dateTime) BETWEEN :start_month AND :end_month "
 					+ "AND year(trans.dateTime) BETWEEN :start_year AND :end_year"
 					+ orderBy;
@@ -134,23 +140,26 @@ public class TransactionDaoJPA2Impl implements TransactionDao {
 			query.setParameter("end_month", calEnd.get(Calendar.MONTH) + 1);
 			query.setParameter("end_year", calEnd.get(Calendar.YEAR));
 			list = query.getResultList();
-		} else {//if limitation presents for single or any limits aren't specified
+		} else {// if limitation presents for single or any limits aren't
+				// specified
 			Date queryDate = null;
 			String sign = null;
-			if (endDate != null) {//if ending date limit is specified
+			if (endDate != null) {// if ending date limit is specified
 				queryDate = endDate;
-				sign = "<=";//select all that less or equal from the date
+				sign = "<=";// select all that less or equal from the date
 
-			} else if (startDate != null) {//if starting date limit is specified
+			} else if (startDate != null) {// if starting date limit is
+											// specified
 				queryDate = startDate;
-				sign = ">=";//select all that bigger or equal from the date
-			} else {//if no limit is specified
+				sign = ">=";// select all that bigger or equal from the date
+			} else {// if no limit is specified
 				queryDate = new Date();
-				sign = "=";//select all that equal to the date
+				sign = "=";// select all that equal to the date
 			}
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(queryDate);
-			queryStr = "SELECT trans FROM Transaction trans WHERE day(trans.dateTime) "
+			queryStr = "SELECT trans FROM Transaction trans WHERE "+ userSelQuery
+					+ " day(trans.dateTime) "
 					+ sign
 					+ " :date"
 					+ " AND month(trans.dateTime) "
