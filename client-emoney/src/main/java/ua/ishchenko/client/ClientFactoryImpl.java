@@ -13,12 +13,14 @@ import ua.ishchenko.client.mvp.view.users.UsersView;
 
 public class ClientFactoryImpl implements ClientFactory {
 	private final EventBus eventBus = new SimpleEventBus();
+	@SuppressWarnings("deprecation")
 	private final PlaceController placeController = new PlaceController(
 			eventBus);
 
 	private IWalletsView mailView;
 	private IUsersView usersView;
 	private ITransactionsView transactionsView;
+	private static ClientServiceFactory serviceFactory;
 
 	@Override
 	public EventBus getEventBus() {
@@ -49,5 +51,13 @@ public class ClientFactoryImpl implements ClientFactory {
 		if (transactionsView == null)
 			this.transactionsView = new TransactionsView();
 		return transactionsView;
+	}
+
+	@Override
+	public ClientServiceFactory getServiceFactory() {
+		if (serviceFactory == null) {
+			serviceFactory = new ClientServiceFactoryImpl();
+		}
+		return serviceFactory;
 	}
 }

@@ -74,7 +74,12 @@
 			<artifactId>restygwt</artifactId>
 			<version>2.0.1</version>
 		</dependency>
-
+		<!-- common project with shared entities, enums, e.t.c -->
+		<dependency>
+			<groupId>ua.ishchenko</groupId>
+			<artifactId>emoney-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
