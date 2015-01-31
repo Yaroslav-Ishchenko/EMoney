@@ -16,32 +16,32 @@ package ua.ishchenko.client;
 
 import org.fusesource.restygwt.client.Defaults;
 
+import ua.ishchenko.client.services.UserService;
+
 import com.google.gwt.core.client.GWT;
 
 /**
  * Sample implementation of {@link ClientFactory}.
  */
-public class ClientServiceFactoryImpl implements ClientServiceFactory
-{
+public class ClientServiceFactoryImpl implements ClientServiceFactory {
 
-   private String serviceBaseUrl;
-   public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
+//	WSConfigurationConstants wsConst = GWT
+//			.create(WSConfigurationConstants.class);
+	private String serviceBaseUrl;
+	public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
 
-   private void ensureRestyIsConfigured()
-   {
-      if (serviceBaseUrl == null)
-      {
-         serviceBaseUrl = GWT.getHostPageBaseURL() + "aml/";
-         serviceBaseUrl = serviceBaseUrl.replaceFirst("/lmc", "");
-         Defaults.setServiceRoot(serviceBaseUrl);
-         Defaults.setDateFormat(DEFAULT_DATETIME_FORMAT);
-      }
-   }
-//
-//   @Override
-//   public UserService getUserService()
-//   {
-//      ensureRestyIsConfigured();
-//      return GWT.create(UserService.class);
-//   }
+	private void ensureRestyIsConfigured() {
+		if (serviceBaseUrl == null) {
+			serviceBaseUrl ="";// wsConst.baseWSURL() + "/";
+			Defaults.setServiceRoot(serviceBaseUrl);
+			Defaults.setDateFormat(DEFAULT_DATETIME_FORMAT);
+		}
+	}
+	
+	 @Override
+	 public UserService getUserService()
+	 {
+	 ensureRestyIsConfigured();
+	 return GWT.create(UserService.class);
+	 }
 }

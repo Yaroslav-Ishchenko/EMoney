@@ -14,6 +14,8 @@
  *******************************************************************************/
 package ua.ishchenko.client;
 
+import ua.ishchenko.client.services.UserService;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.PlaceController;
 
@@ -23,5 +25,6 @@ import com.google.gwt.place.shared.PlaceController;
  * the {@link EventBus}, {@link PlaceController} and views.
  */
 public interface ClientServiceFactory {
-	// UserService getUserService();
+
+	UserService getUserService();
 }

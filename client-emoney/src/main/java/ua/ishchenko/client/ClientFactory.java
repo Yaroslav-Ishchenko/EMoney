@@ -6,11 +6,10 @@ import com.google.gwt.place.shared.PlaceController;
 import ua.ishchenko.client.mvp.view.ITransactionsView;
 import ua.ishchenko.client.mvp.view.IUsersView;
 import ua.ishchenko.client.mvp.view.IWalletsView;
-
 public interface ClientFactory {
 	
 	public EventBus getEventBus();
-
+	
 	public PlaceController getPlaceController();
 
 	public IWalletsView getWalletsView();
@@ -20,4 +19,5 @@ public interface ClientFactory {
 	public ITransactionsView getTransactionsView();
 
 	ClientServiceFactory getServiceFactory();
+
 }
