@@ -2,8 +2,10 @@ package ua.ishchenko.client.mvp.view.users;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+
 import ua.ishchenko.client.mvp.view.IUsersView;
 
 public class UsersView extends Composite implements IUsersView {
@@ -14,6 +16,7 @@ public class UsersView extends Composite implements IUsersView {
 	
 	public UsersView() {
 		initWidget(uiBinder.createAndBindUi(this));
+		Window.alert("HI");
 	}
 
 	@Override

@@ -3,9 +3,9 @@ package ua.ishchenko.client;
 import ua.ishchenko.client.mvp.view.ITransactionsView;
 import ua.ishchenko.client.mvp.view.IUsersView;
 import ua.ishchenko.client.mvp.view.IWalletsView;
-import ua.ishchenko.client.mvp.view.mail.WalletsView;
 import ua.ishchenko.client.mvp.view.transactions.TransactionsView;
 import ua.ishchenko.client.mvp.view.users.UsersView;
+import ua.ishchenko.client.mvp.view.wallets.WalletsView;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;

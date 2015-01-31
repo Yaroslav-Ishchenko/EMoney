@@ -41,6 +41,6 @@ public class EMoneyEntryPoint implements EntryPoint {
 		
 		RootLayoutPanel.get().add(mainLayout);
 		
-		History.newItem("wallets:");
+		History.newItem("#wallets:");
 	}
 }

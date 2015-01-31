@@ -5,7 +5,7 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
 
 public class UsersPlace extends Place {
-	private static final String VIEW_HISTORY_TOKEN = "contacts";
+	private static final String VIEW_HISTORY_TOKEN = "users";
 	
 	public UsersPlace() { }
 	

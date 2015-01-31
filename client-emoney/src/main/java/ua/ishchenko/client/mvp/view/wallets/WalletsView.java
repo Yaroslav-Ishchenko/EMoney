@@ -1,4 +1,4 @@
-package ua.ishchenko.client.mvp.view.mail;
+package ua.ishchenko.client.mvp.view.wallets;
 
 import ua.ishchenko.client.mvp.view.IWalletsView;
 
@@ -8,8 +8,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WalletsView extends Composite implements IWalletsView {
-	interface MailViewUiBinder extends UiBinder<Widget, WalletsView> {	}
-	private static MailViewUiBinder uiBinder = GWT.create(MailViewUiBinder.class);
+	interface WalletsViewUiBinder extends UiBinder<Widget, WalletsView> {	}
+	private static WalletsViewUiBinder uiBinder = GWT.create(WalletsViewUiBinder.class);
 	
 	private IMailPresenter presenter;
 
