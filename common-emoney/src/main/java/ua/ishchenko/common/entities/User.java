@@ -8,12 +8,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import ua.ishchenko.common.helper.CustomJsonDateDeserializer;
-import ua.ishchenko.common.helper.CustomJsonDateSerializer;
-
 
 
 /**
@@ -35,8 +29,6 @@ public class User implements Serializable {
 	private String name;
 
 	/** creation date */
-	@JsonSerialize(using = CustomJsonDateSerializer.class)
-	@JsonDeserialize(using = CustomJsonDateDeserializer.class)	
 	private Date createdDate;
 	
 	private Wallet wallet;

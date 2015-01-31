@@ -8,12 +8,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import ua.ishchenko.common.helper.CustomJsonDateDeserializer;
-import ua.ishchenko.common.helper.CustomJsonDateSerializer;
-
 /**
  * Transaction entity
  * 
@@ -34,8 +28,6 @@ public class Transaction implements Serializable {
 
 	private Long amount;
 
-	@JsonSerialize(using = CustomJsonDateSerializer.class)
-	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
 	private Date dateTime;
 
 	private int status;
