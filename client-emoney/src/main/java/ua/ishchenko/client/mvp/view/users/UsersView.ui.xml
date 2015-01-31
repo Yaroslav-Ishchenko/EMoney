@@ -14,7 +14,7 @@
 
 
 	<gwt:SimpleLayoutPanel styleName="{style.simple-layout}">
-		<gwt:Label text="Edit y our contacts list here..." />
+		<gwt:Label text="Edit y our users list here..." />
 	</gwt:SimpleLayoutPanel>
 </ui:UiBinder>
  

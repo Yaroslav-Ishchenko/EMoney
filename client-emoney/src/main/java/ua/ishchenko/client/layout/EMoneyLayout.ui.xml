@@ -32,13 +32,13 @@
 		<gwt:west size="200">
 			<gwt:HTMLPanel styleName="{style.navigator}">
 				<gwt:HTMLPanel styleName="{style.outterdiv}">
-					<a id="wallets-view" href="#wallets:">Mails</a>
+					<a id="wallets-view" href="#wallets:">Wallets</a>
 				</gwt:HTMLPanel>
 				<gwt:HTMLPanel styleName="{style.outterdiv}">
-					<a id="users-view" href="#users:">Contacts</a>
+					<a id="users-view" href="#users:">Users</a>
 				</gwt:HTMLPanel>
 				<gwt:HTMLPanel styleName="{style.outterdiv}">
-					<a id="transactions-view" href="#transactions:">Tasks</a>
+					<a id="transactions-view" href="#transactions:">Transactions</a>
 				</gwt:HTMLPanel>
 			</gwt:HTMLPanel>
 

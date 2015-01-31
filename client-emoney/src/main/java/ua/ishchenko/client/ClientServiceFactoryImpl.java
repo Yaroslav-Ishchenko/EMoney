@@ -24,24 +24,20 @@ import com.google.gwt.core.client.GWT;
  * Sample implementation of {@link ClientFactory}.
  */
 public class ClientServiceFactoryImpl implements ClientServiceFactory {
-
-//	WSConfigurationConstants wsConst = GWT
-//			.create(WSConfigurationConstants.class);
 	private String serviceBaseUrl;
 	public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
 
 	private void ensureRestyIsConfigured() {
 		if (serviceBaseUrl == null) {
-			serviceBaseUrl ="";// wsConst.baseWSURL() + "/";
+			serviceBaseUrl ="";// wsConst.wsUrl();
 			Defaults.setServiceRoot(serviceBaseUrl);
 			Defaults.setDateFormat(DEFAULT_DATETIME_FORMAT);
 		}
 	}
-	
-	 @Override
-	 public UserService getUserService()
-	 {
-	 ensureRestyIsConfigured();
-	 return GWT.create(UserService.class);
-	 }
+
+	@Override
+	public UserService getUserService() {
+		ensureRestyIsConfigured();
+		return GWT.create(UserService.class);
+	}
 }

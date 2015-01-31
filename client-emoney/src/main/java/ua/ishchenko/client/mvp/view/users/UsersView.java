@@ -7,8 +7,8 @@ import com.google.gwt.user.client.ui.Widget;
 import ua.ishchenko.client.mvp.view.IUsersView;
 
 public class UsersView extends Composite implements IUsersView {
-	interface ContactsViewUiBinder extends UiBinder<Widget, UsersView> {	}
-	private static ContactsViewUiBinder uiBinder = GWT.create(ContactsViewUiBinder.class);
+	interface UsersViewUiBinder extends UiBinder<Widget, UsersView> {	}
+	private static UsersViewUiBinder uiBinder = GWT.create(UsersViewUiBinder.class);
 	
 	private IContactsPresenter presenter;
 	
