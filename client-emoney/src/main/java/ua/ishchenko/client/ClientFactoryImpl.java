@@ -17,7 +17,7 @@ public class ClientFactoryImpl implements ClientFactory {
 	@SuppressWarnings("deprecation")
 	private final PlaceController placeController = new PlaceController(
 			eventBus);
-	private IWalletsView mailView;
+	private IWalletsView walletsView;
 	private IUsersView usersView;
 	private ITransactionsView transactionsView;
 	private ClientServiceFactoryImpl serviceFactory;
@@ -36,9 +36,9 @@ public class ClientFactoryImpl implements ClientFactory {
 
 	@Override
 	public IWalletsView getWalletsView() {
-		if (mailView == null)
-			this.mailView = new WalletsView();
-		return mailView;
+		if (walletsView == null)
+			this.walletsView = new WalletsView();
+		return walletsView;
 	}
 
 	@Override

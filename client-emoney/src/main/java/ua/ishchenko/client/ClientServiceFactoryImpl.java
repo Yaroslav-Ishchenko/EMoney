@@ -14,8 +14,11 @@
  *******************************************************************************/
 package ua.ishchenko.client;
 
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Defaults;
 
+import org.fusesource.restygwt.client.Resource;
+import org.fusesource.restygwt.client.RestServiceProxy;
 import ua.ishchenko.client.services.UserService;
 
 import com.google.gwt.core.client.GWT;
@@ -29,11 +32,11 @@ public class ClientServiceFactoryImpl implements ClientServiceFactory {
 
 	private void ensureRestyIsConfigured() {
 		if (serviceBaseUrl == null) {
-			serviceBaseUrl ="";// wsConst.wsUrl();
+			serviceBaseUrl ="http://127.0.0.1:9280/emoney-service-0.0.1-SNAPSHOT";// wsConst.wsUrl()
 			Defaults.setServiceRoot(serviceBaseUrl);
 			Defaults.setDateFormat(DEFAULT_DATETIME_FORMAT);
 		}
-	}
+    }
 
 	@Override
 	public UserService getUserService() {

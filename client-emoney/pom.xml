@@ -9,7 +9,7 @@
 	<properties>
 
 		<!-- client -->
-		<gwt.version>2.7.0</gwt.version>
+		<gwt.version>2.5.0</gwt.version>
 		<validation.version>1.0.0.GA</validation.version>
 
 		<!-- testing -->
@@ -69,17 +69,23 @@
 		</dependency>
 
 		<!-- RESTy GWT generator of rest services and json encoder/decoders -->
-		<dependency>
-			<groupId>org.fusesource.restygwt</groupId>
-			<artifactId>restygwt</artifactId>
-			<version>2.0.1</version>
-		</dependency>
+        <dependency>
+            <groupId>org.fusesource.restygwt</groupId>
+            <artifactId>restygwt</artifactId>
+            <version>2.0.1</version>
+        </dependency>
 
-		<!-- common project with shared entities, enums, e.t.c -->
+
+        <!-- common project with shared entities, enums, e.t.c -->
 		<dependency>
 			<groupId>ua.ishchenko</groupId>
 			<artifactId>emoney-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 
 	</dependencies>
@@ -114,16 +120,11 @@
 				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
 					documentation at codehaus.org -->
 				<configuration>
-					<configuration>
-						<compileSourcesArtifacts>
-							<compileSourcesArtifact>ua.ishchenko:Models</compileSourcesArtifact>
-						</compileSourcesArtifacts>
-					</configuration>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<compileReport>true</compileReport>
 					<copyWebapp>true</copyWebapp>
 					<localWorkers>2</localWorkers>
-					<webXml>${baseDir}/${webappDirectory}/WEB-INF/web.xml</webXml>
+					<webXml>${basedir}/${webappDirectory}/WEB-INF/web.xml</webXml>
 
 					<strict>true</strict>
 					<!-- add -strict parameter to the compiler command line -->

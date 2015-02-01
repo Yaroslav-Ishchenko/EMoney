@@ -16,7 +16,7 @@ public class UsersView extends Composite implements IUsersView {
 	
 	public UsersView() {
 		initWidget(uiBinder.createAndBindUi(this));
-		Window.alert("HI");
+		Window.alert("HIfdgdf");
 	}
 
 	@Override
