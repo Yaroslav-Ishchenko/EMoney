@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -19,6 +20,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
 import ua.ishchenko.common.entities.User;
+import ua.ishchenko.common.entities.WSResultCode;
 
 @Path("/users")
 public interface IUserRestService {
@@ -35,7 +37,7 @@ public interface IUserRestService {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	Response createUser(User user);
+	WSResultCode createUser(User user);
 
 	/**
 	 * A list of resources (here Users) provided in json format will be added to
@@ -48,7 +50,7 @@ public interface IUserRestService {
 	@Path("/list")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	Response createUsers(List<User> users);
+	WSResultCode createUsers(List<User> users);
 
 	/************************************ READ ************************************/
 	/**
@@ -63,7 +65,7 @@ public interface IUserRestService {
 	@Path("{id}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	Response findById(@PathParam("id") Long id) throws JsonGenerationException,
+	User findById(@PathParam("id") Long id) throws JsonGenerationException,
 			JsonMappingException, IOException;
 
 	/************************************ READ ************************************/
@@ -76,7 +78,7 @@ public interface IUserRestService {
 	 * @throws JsonGenerationException
 	 */
 	@GET
-	@Produces({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	List<User> getUsers() throws JsonGenerationException, JsonMappingException,
 			IOException;
 
@@ -94,28 +96,48 @@ public interface IUserRestService {
 	 * @return
 	 */
 	@PUT
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	Response updateUserById(User user);
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	WSResultCode updateUserById(User user);
 
 	/************************************ DELETE ************************************/
 	@DELETE
 	@Path("{id}")
-	@Produces({ MediaType.TEXT_HTML })
-	Response deleteUserById(@PathParam("id") Long id);
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	WSResultCode deleteUserById(@PathParam("id") Long id);
 
 	@DELETE
-	@Produces({ MediaType.TEXT_HTML })
-	Response deleteUsers();
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	WSResultCode deleteUsers();
 
 	@Path("{userid}/withdraw")
 	@POST
-	public Response withdraw(@PathParam("userid") Long userid,
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public WSResultCode withdraw(@PathParam("userid") Long userid,
 			@QueryParam("amount") Long withdrawAmount);
 
 	@Path("{userid}/deposit")
 	@POST
-	Response deposit(@PathParam("userid") Long userid,
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	WSResultCode deposit(@PathParam("userid") Long userid,
 			@QueryParam("amount") Long depositAmount);
+	
+	/**
+	 * 	 The response for the preflight request made implicitly by the bowser allows CORS technology to be used
+	 * @return
+	 */
+	@OPTIONS
+	public Response usersCORSRequest() ;
+	@Path("{id}")
+	@OPTIONS
+	public Response idCORSRequest() ;
+	@Path("list")
+	@OPTIONS
+	public Response listCORSRequest() ;
+	@Path("{userid}/{parameter: deposit|withdraw}")
+	@OPTIONS
+	public Response depositWithdrawCORSRequest() ;
 
 }
