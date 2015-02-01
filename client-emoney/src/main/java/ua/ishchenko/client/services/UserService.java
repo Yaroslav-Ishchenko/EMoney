@@ -4,8 +4,8 @@ package ua.ishchenko.client.services;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.Options;
 import org.fusesource.restygwt.client.RestService;
-import ua.ishchenko.common.entities.User;
-import ua.ishchenko.common.entities.WSResultCode;
+import ua.ishchenko.common.wsbeans.User;
+import ua.ishchenko.common.wsbeans.WSResultCode;
 
 import javax.ws.rs.*;
 import java.util.List;
@@ -25,7 +25,7 @@ public interface UserService extends RestService {
     void findById(@PathParam("id") Long id, MethodCallback<User> callback);
 
     @GET
-    void getUsers(MethodCallback<List<User>> callback);
+    void getUsers(MethodCallback<List<String>> callback);
 
     @PUT
     void updateUserById(User user, MethodCallback<WSResultCode> callback);

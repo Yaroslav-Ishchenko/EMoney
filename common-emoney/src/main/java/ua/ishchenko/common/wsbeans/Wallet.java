@@ -1,4 +1,4 @@
-package ua.ishchenko.common.entities;
+package ua.ishchenko.common.wsbeans;
 
 import java.io.Serializable;
 

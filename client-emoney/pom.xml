@@ -9,7 +9,7 @@
 	<properties>
 
 		<!-- client -->
-		<gwt.version>2.5.0</gwt.version>
+		<gwt.version>2.7.0</gwt.version>
 		<validation.version>1.0.0.GA</validation.version>
 
 		<!-- testing -->
@@ -67,13 +67,6 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- RESTy GWT generator of rest services and json encoder/decoders -->
-        <dependency>
-            <groupId>org.fusesource.restygwt</groupId>
-            <artifactId>restygwt</artifactId>
-            <version>2.0.1</version>
-        </dependency>
 
 
         <!-- common project with shared entities, enums, e.t.c -->

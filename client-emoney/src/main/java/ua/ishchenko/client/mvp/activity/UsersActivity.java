@@ -8,15 +8,16 @@ import org.fusesource.restygwt.client.MethodCallback;
 import ua.ishchenko.client.EMoneyConstants;
 import ua.ishchenko.client.ClientFactory;
 import ua.ishchenko.client.mvp.view.IUsersView;
-import ua.ishchenko.common.entities.User;
-import ua.ishchenko.common.entities.WSResultCode;
+import ua.ishchenko.common.wsbeans.User;
+import ua.ishchenko.common.wsbeans.WSResultCode;
 
 import java.util.List;
 
 public class UsersActivity extends AbstractMainActivity implements IUsersView.IContactsPresenter {
 	private ClientFactory clientFactory;
-	
-	public UsersActivity(ClientFactory clientFactory) {
+    private IUsersView view;
+
+    public UsersActivity(ClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
 	}
 	
@@ -24,7 +25,7 @@ public class UsersActivity extends AbstractMainActivity implements IUsersView.IC
 	public void start(AcceptsOneWidget container, EventBus eventBus) {
 		applyCurrentLinkStyle(EMoneyConstants.USERS_LINK_ID);
 		
-		final IUsersView view = clientFactory.getUsersView();
+		 view = clientFactory.getUsersView();
 		view.setPresenter(this);
 		container.setWidget(view.asWidget());
         getUsers();
@@ -32,28 +33,16 @@ public class UsersActivity extends AbstractMainActivity implements IUsersView.IC
 
     private void getUsers() {
 
-    clientFactory.getServiceFactory().getUserService().getUsers(new MethodCallback<List<User>>() {
+    clientFactory.getServiceFactory().getUserService().getUsers(new MethodCallback<List<String>>() {
         @Override
         public void onFailure(Method method, Throwable exception) {
-            Window.alert("Failed"+exception.getMessage()+method.getResponse().getText());
+            Window.alert(method.getResponse().getStatusText());
         }
 
         @Override
-        public void onSuccess(Method method, List<User> response) {
-            Window.alert("Succes");
+        public void onSuccess(Method method, List<String> response) {
+            Window.alert(response.get(0));
         }
     });
-        clientFactory.getServiceFactory().getUserService().createUser(new User("Yaroslav"), new MethodCallback<WSResultCode>() {
-            @Override
-            public void onFailure(Method method, Throwable throwable) {
-                Window.alert("Failed"+throwable.getMessage()+method.getResponse().getText());
-            }
-
-            @Override
-            public void onSuccess(Method method, WSResultCode user) {
-                Window.alert("Succes");
-
-            }
-        });
     }
 }

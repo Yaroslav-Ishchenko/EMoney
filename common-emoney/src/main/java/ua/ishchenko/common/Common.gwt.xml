@@ -5,4 +5,5 @@
 <inherits name="com.google.gwt.user.User"/>
 <source path="entities" />
 <source path="enumerations" />
+<source path="wsbeans" />
 </module>

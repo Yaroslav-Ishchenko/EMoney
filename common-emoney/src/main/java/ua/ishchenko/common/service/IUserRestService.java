@@ -19,8 +19,8 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import ua.ishchenko.common.entities.User;
-import ua.ishchenko.common.entities.WSResultCode;
+import ua.ishchenko.common.wsbeans.User;
+import ua.ishchenko.common.wsbeans.WSResultCode;
 
 @Path("/users")
 public interface IUserRestService {
@@ -79,7 +79,7 @@ public interface IUserRestService {
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	List<User> getUsers() throws JsonGenerationException, JsonMappingException,
+	List<String> getUsers() throws JsonGenerationException, JsonMappingException,
 			IOException;
 
 	/************************************ UPDATE ************************************/
