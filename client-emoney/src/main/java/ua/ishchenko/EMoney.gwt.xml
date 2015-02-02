@@ -9,6 +9,7 @@
 	<inherits name="com.google.gwt.resources.Resources" />
 	<inherits name="org.fusesource.restygwt.RestyGWT" />
 	<inherits name="ua.ishchenko.common.Common" />
+		<inherits name="com.google.gwt.uibinder.UiBinder" />
 	
 	<!-- Specify the paths for GWT translatable code -->
 	<source path="client" />

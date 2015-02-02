@@ -41,7 +41,7 @@ public class UsersActivity extends AbstractMainActivity implements IUsersView.IC
 
         @Override
         public void onSuccess(Method method, List<User> response) {
-            Window.alert(response.get(0).getName());
+            view.setDataGridRowData(response);
         }
     });
     }
