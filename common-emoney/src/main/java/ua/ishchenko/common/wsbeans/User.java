@@ -5,32 +5,50 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.fusesource.restygwt.client.Json;
 
+import ua.ishchenko.common.wsbeans.Wallet;
 
 /**
  * User entity
  * 
  * @author jaros
  */
-@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso(User.class)
+@XmlType(name = "user", propOrder = { "id", "name","createdDate", "wallet" })
+@XmlRootElement(name = "user")
 public class User implements Serializable {
-	
-	private static final long serialVersionUID = -8039686696076337053L;
 
 	/** id of the user */
+	@XmlElement(name = "id")
+	@Json(name = "id")
+	@JsonProperty("id")
 	private Long id;
 
 	/** name of the user */
+	@XmlElement(name = "name")
+	@Json(name = "name")
+	@JsonProperty("name")
 	private String name;
 
 	/** creation date */
-	private Date createdDate;
+	@XmlElement(name = "createdDate")
+	@Json(name = "createdDate")
+	@JsonProperty("createdDate")
+	private Long createdDate;
 	
+	
+	@XmlElement(name = "wallet")
+	@Json(name = "wallet")
+	@JsonProperty("wallet")
 	private Wallet wallet;
 
 	public Wallet getWallet() {
@@ -45,9 +63,9 @@ public class User implements Serializable {
 		this(null);
 	}
 
-	public User( String name) {
+	public User(String name) {
 		this.name = name;
-		this.createdDate = new Date();
+		this.createdDate = new Date().getTime();
 	}
 
 	public String getName() {
@@ -59,10 +77,10 @@ public class User implements Serializable {
 	}
 
 	public Date getCreatedDate() {
-		return this.createdDate;
+		return new Date(createdDate);
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(Long createdDate) {
 		this.createdDate = createdDate;
 	}
 

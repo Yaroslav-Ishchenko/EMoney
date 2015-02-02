@@ -1,14 +1,23 @@
 package ua.ishchenko.client.services;
 
 
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
 import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.Options;
 import org.fusesource.restygwt.client.RestService;
+
 import ua.ishchenko.common.wsbeans.User;
 import ua.ishchenko.common.wsbeans.WSResultCode;
-
-import javax.ws.rs.*;
-import java.util.List;
 
 @Path("/users")
 public interface UserService extends RestService {
@@ -25,7 +34,8 @@ public interface UserService extends RestService {
     void findById(@PathParam("id") Long id, MethodCallback<User> callback);
 
     @GET
-    void getUsers(MethodCallback<List<String>> callback);
+    //@Consumes(MediaType.APPLICATION_JSON)
+    void getUsers(MethodCallback<List<User>> callback);
 
     @PUT
     void updateUserById(User user, MethodCallback<WSResultCode> callback);

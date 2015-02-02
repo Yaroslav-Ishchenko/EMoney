@@ -79,7 +79,7 @@ public interface IUserRestService {
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	List<String> getUsers() throws JsonGenerationException, JsonMappingException,
+	List<User> getUsers() throws JsonGenerationException, JsonMappingException,
 			IOException;
 
 	/************************************ UPDATE ************************************/

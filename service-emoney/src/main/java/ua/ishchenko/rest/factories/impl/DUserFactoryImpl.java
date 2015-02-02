@@ -30,7 +30,7 @@ public class DUserFactoryImpl implements DUserFactory {
 		user.setName(dUser.getName());
 		Wallet wallet = dWalletFactory.convertToWallet(dUser.getDWallet());
 		user.setWallet(wallet);
-		user.setCreatedDate(dUser.getCreatedDate());
+		user.setCreatedDate(dUser.getCreatedDate().getTime());
 		return user;
 
 	}

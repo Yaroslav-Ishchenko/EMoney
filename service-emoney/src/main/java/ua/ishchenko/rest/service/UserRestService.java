@@ -123,7 +123,7 @@ public class UserRestService implements IUserRestService {
 	}
 
 	@Override
-	public List<String> getUsers() throws JsonGenerationException,
+	public List<User> getUsers() throws JsonGenerationException,
 			JsonMappingException, IOException {
 		// response.addHeader("Access-Control-Allow-Origin", "*");
 		// response.addHeader("Access-Control-Allow-Methods",
@@ -132,7 +132,7 @@ public class UserRestService implements IUserRestService {
 		// "x-http-method-override");
 		List<DUser> users = userDao.getDUsers();
 
-		return new ArrayList<String>(Arrays.asList("JS", "BD"));//dUserFactory.convertToListUser(users);
+		return dUserFactory.convertToListUser(users);
 	}
 
 	@Override

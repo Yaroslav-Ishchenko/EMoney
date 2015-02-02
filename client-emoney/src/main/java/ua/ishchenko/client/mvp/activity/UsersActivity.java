@@ -33,15 +33,15 @@ public class UsersActivity extends AbstractMainActivity implements IUsersView.IC
 
     private void getUsers() {
 
-    clientFactory.getServiceFactory().getUserService().getUsers(new MethodCallback<List<String>>() {
+    clientFactory.getServiceFactory().getUserService().getUsers(new MethodCallback<List<User>>() {
         @Override
         public void onFailure(Method method, Throwable exception) {
             Window.alert(method.getResponse().getStatusText());
         }
 
         @Override
-        public void onSuccess(Method method, List<String> response) {
-            Window.alert(response.get(0));
+        public void onSuccess(Method method, List<User> response) {
+            Window.alert(response.get(0).getName());
         }
     });
     }
