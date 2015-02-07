@@ -29,7 +29,7 @@ public class UsersView extends Composite implements IUsersView {
     private static UsersViewUiBinder uiBinder = GWT
             .create(UsersViewUiBinder.class);
     //UsersConstants userCnst = GWT.create(UsersConstants.class);
-    private IContactsPresenter presenter;
+    private IUsersPresenter presenter;
     @UiField(provided = true)
     DataGrid<User> userDataGrid = new DataGrid<User>();
 
@@ -125,7 +125,7 @@ public class UsersView extends Composite implements IUsersView {
     }
 
     @Override
-    public void setPresenter(IContactsPresenter presenter) {
+    public void setPresenter(IUsersPresenter presenter) {
         this.presenter = presenter;
     }
 }

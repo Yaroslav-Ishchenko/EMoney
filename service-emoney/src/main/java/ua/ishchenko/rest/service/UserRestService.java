@@ -69,7 +69,7 @@ public class UserRestService implements IUserRestService {
 				.header("Access-Control-Allow-Methods",
 						"POST, GET, UPDATE, OPTIONS")
 				.header("Access-Control-Allow-Headers",
-						"x-http-method-override")
+						"content-type,x-http-method-override")
 						.build();
 		//header("Content-Type", "application/json")
 	}
@@ -78,7 +78,8 @@ public class UserRestService implements IUserRestService {
 	@Transactional
 	public WSResultCode createUser(User user) {
 		WSResultCode result = new WSResultCode();
-		DUser dUser = dUserFactory.convertToDUser(user);
+		//DUser dUser = dUserFactory.convertToDUser(user);
+		DUser dUser = new DUser("JS");
 		userDao.createDUser(dUser);
 
 		result.setCode(Response.Status.CREATED.getStatusCode());

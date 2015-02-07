@@ -14,7 +14,6 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
 import ua.ishchenko.common.wsbeans.Transaction;
-import ua.ishchenko.common.wsbeans.WSResultCode;
 
 @Path("/transactions")
 public interface ITransactionRestService {

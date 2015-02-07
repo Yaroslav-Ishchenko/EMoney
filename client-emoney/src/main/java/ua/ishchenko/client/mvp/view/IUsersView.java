@@ -7,9 +7,9 @@ import ua.ishchenko.common.wsbeans.User;
 import com.google.gwt.user.client.ui.IsWidget;
 
 public interface IUsersView extends IsWidget {
-	public void setPresenter(IContactsPresenter presenter);
+	public void setPresenter(IUsersPresenter presenter);
 	
-	public interface IContactsPresenter {
+	public interface IUsersPresenter {
 	}
 
 	void setDataGridRowData(List<User> userList);

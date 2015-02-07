@@ -3,8 +3,10 @@ package ua.ishchenko.client.mvp.activity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+
 import ua.ishchenko.client.EMoneyConstants;
 import ua.ishchenko.client.ClientFactory;
 import ua.ishchenko.client.mvp.view.IUsersView;
@@ -13,7 +15,7 @@ import ua.ishchenko.common.wsbeans.WSResultCode;
 
 import java.util.List;
 
-public class UsersActivity extends AbstractMainActivity implements IUsersView.IContactsPresenter {
+public class UsersActivity extends AbstractMainActivity implements IUsersView.IUsersPresenter {
 	private ClientFactory clientFactory;
     private IUsersView view;
 
@@ -44,5 +46,6 @@ public class UsersActivity extends AbstractMainActivity implements IUsersView.IC
             view.setDataGridRowData(response);
         }
     });
+
     }
 }
