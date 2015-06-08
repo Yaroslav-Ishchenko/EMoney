@@ -35,7 +35,7 @@ public interface IUserRestService {
 	 * @return
 	 */
 	@POST
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	WSResultCode createUser(User user);
 
